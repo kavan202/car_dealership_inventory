@@ -1,16 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { Car, Lock, User, ArrowRight, ShieldCheck, Info } from 'lucide-react';
+import ReviewerInfoModal from '../components/ReviewerInfoModal';
 
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
+  const timeoutRef = useRef(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const handleMouseEnter = () => {
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    setIsInfoModalOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setIsInfoModalOpen(false);
+    }, 200);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -90,23 +104,26 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Demo Credentials Box */}
-        <div className="mt-6 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 space-y-1.5">
-          <div className="flex items-center space-x-1.5 text-blue-400 font-semibold mb-1">
-            <ShieldCheck className="w-4 h-4" />
-            <span>Default Test Account:</span>
+        {/* Reviewer / Demo Credentials Box */}
+        <div className="mt-6 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 space-y-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-1.5 text-blue-400 font-semibold">
+              <ShieldCheck className="w-4 h-4" />
+              <span>Reviewer / Demo Credentials</span>
+            </div>
+            <button
+              type="button"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+              onClick={() => setIsInfoModalOpen((prev) => !prev)}
+              className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 hover:bg-blue-500/35 hover:text-blue-300 transition-all focus:outline-none"
+              title="Hover to view Reviewer Information"
+              aria-label="Reviewer Information"
+            >
+              <Info className="w-3.5 h-3.5" />
+            </button>
           </div>
-          <p><strong className="text-slate-200">Admin:</strong> admin / admin123</p>
-        </div>
-
-        {/* Info Banner for Admin Registration */}
-        <div className="mt-3 p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-start space-x-2.5">
-          <button type="button" tabIndex={-1} className="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 mt-0.5 text-blue-400 cursor-default" title="Info">
-            <Info className="w-3.5 h-3.5" />
-          </button>
-          <span className="leading-relaxed">
-            Admin registration is restricted and can only be performed through the Admin Dashboard.
-          </span>
+          <p className="pt-0.5"><strong className="text-slate-200">Admin:</strong> admin / admin123</p>
         </div>
 
         <div className="mt-6 text-center text-xs text-slate-400">
@@ -116,6 +133,13 @@ export default function Login() {
           </Link>
         </div>
       </div>
+
+      <ReviewerInfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+      />
     </div>
   );
 }
