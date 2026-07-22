@@ -4,19 +4,22 @@ import { vehicleService } from '../services/vehicleService';
 import { useAuth } from '../context/AuthContext';
 import VehicleModal from '../components/VehicleModal';
 import RestockModal from '../components/RestockModal';
+import RegisterAdminModal from '../components/RegisterAdminModal';
 import Toast from '../components/Toast';
-import { ShieldCheck, Plus, Edit, Trash2, PlusCircle, Search, Car, AlertTriangle } from 'lucide-react';
+import { ShieldCheck, Plus, Edit, Trash2, PlusCircle, Search, Car, AlertTriangle, UserPlus, ArrowUp, ArrowDown } from 'lucide-react';
 
 export default function AdminPanel() {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [stockSortOrder, setStockSortOrder] = useState('asc'); // default ascending sort by stock status
 
   // Modals state
   const [isVehicleModalOpen, setIsVehicleModalOpen] = useState(false);
   const [selectedVehicle, setSelectedVehicle] = useState(null);
   const [isRestockModalOpen, setIsRestockModalOpen] = useState(false);
   const [restockVehicle, setRestockVehicle] = useState(null);
+  const [isRegisterAdminModalOpen, setIsRegisterAdminModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [toast, setToast] = useState(null);
@@ -114,6 +117,15 @@ export default function AdminPanel() {
       v.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Sort vehicles according to stock status (quantity)
+  const sortedVehicles = [...filteredVehicles].sort((a, b) => {
+    if (stockSortOrder === 'asc') {
+      return a.quantity - b.quantity;
+    } else {
+      return b.quantity - a.quantity;
+    }
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-fade-in">
       {/* Admin Title */}
@@ -127,18 +139,27 @@ export default function AdminPanel() {
               Admin Management Console
             </h1>
             <p className="text-sm text-slate-400">
-              Manage inventory CRUD, stock adjustments, and dealership records
+              Manage inventory CRUD, stock adjustments, and admin registrations
             </p>
           </div>
         </div>
 
-        <button
-          onClick={handleOpenAddModal}
-          className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white rounded-xl text-sm font-semibold flex items-center space-x-2 shadow-lg shadow-indigo-500/25 transition-all hover:scale-105"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Add New Vehicle</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => setIsRegisterAdminModalOpen(true)}
+            className="px-5 py-2.5 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white rounded-xl text-sm font-semibold flex items-center space-x-2 shadow-lg shadow-purple-500/25 transition-all hover:scale-105"
+          >
+            <UserPlus className="w-4 h-4" />
+            <span>Register Admin</span>
+          </button>
+          <button
+            onClick={handleOpenAddModal}
+            className="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white rounded-xl text-sm font-semibold flex items-center space-x-2 shadow-lg shadow-indigo-500/25 transition-all hover:scale-105"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Add New Vehicle</span>
+          </button>
+        </div>
       </div>
 
       {/* Admin Table Controls */}
@@ -154,7 +175,7 @@ export default function AdminPanel() {
           />
         </div>
         <p className="text-xs text-slate-400">
-          Showing <span className="text-slate-100 font-bold">{filteredVehicles.length}</span> of {vehicles.length} total models
+          Showing <span className="text-slate-100 font-bold">{sortedVehicles.length}</span> of {vehicles.length} total models
         </p>
       </div>
 
@@ -168,7 +189,24 @@ export default function AdminPanel() {
                 <th className="px-6 py-4">Vehicle Detail</th>
                 <th className="px-6 py-4">Category</th>
                 <th className="px-6 py-4">Price</th>
-                <th className="px-6 py-4">Stock Status</th>
+                <th 
+                  className="px-6 py-4 cursor-pointer select-none hover:text-slate-200 transition-colors"
+                  onClick={() => setStockSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                  title="Click to toggle Stock Status sort order"
+                >
+                  <div className="flex items-center space-x-1.5">
+                    <span>Stock Status</span>
+                    {stockSortOrder === 'asc' ? (
+                      <span className="flex items-center text-indigo-400 text-[10px] bg-indigo-500/10 px-1.5 py-0.5 rounded border border-indigo-500/20 font-bold lowercase">
+                        <ArrowUp className="w-3 h-3 mr-0.5" /> asc
+                      </span>
+                    ) : (
+                      <span className="flex items-center text-slate-400 text-[10px] bg-slate-800 px-1.5 py-0.5 rounded font-bold lowercase">
+                        <ArrowDown className="w-3 h-3 mr-0.5" /> desc
+                      </span>
+                    )}
+                  </div>
+                </th>
                 <th className="px-6 py-4 text-right">Actions</th>
               </tr>
             </thead>
@@ -179,14 +217,14 @@ export default function AdminPanel() {
                     Loading management console...
                   </td>
                 </tr>
-              ) : filteredVehicles.length === 0 ? (
+              ) : sortedVehicles.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="text-center py-12 text-slate-400">
                     No vehicles match your search.
                   </td>
                 </tr>
               ) : (
-                filteredVehicles.map((v) => (
+                sortedVehicles.map((v) => (
                   <tr key={v.id} className="hover:bg-slate-800/30 transition-colors">
                     <td className="px-6 py-4 text-xs font-mono text-slate-500">#{v.id}</td>
                     <td className="px-6 py-4">
@@ -260,6 +298,17 @@ export default function AdminPanel() {
         onRestock={handleRestockSubmit}
         vehicle={restockVehicle}
         isSubmitting={isSubmitting}
+      />
+
+      <RegisterAdminModal
+        isOpen={isRegisterAdminModalOpen}
+        onClose={() => setIsRegisterAdminModalOpen(false)}
+        onSuccess={(createdAdmin) => {
+          setToast({
+            type: 'success',
+            message: `Admin user "${createdAdmin.username}" registered successfully!`,
+          });
+        }}
       />
 
       <Toast toast={toast} onClose={() => setToast(null)} />
