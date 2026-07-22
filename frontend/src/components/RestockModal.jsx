@@ -1,30 +1,22 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, PlusCircle, Package } from 'lucide-react';
 
 export default function RestockModal({ isOpen, onClose, onRestock, vehicle, isSubmitting }) {
   const [quantity, setQuantity] = useState(5);
 
-  // Lock body scroll when modal is open
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'auto';
-    }
-    return () => {
-      document.body.style.overflow = 'auto';
-    };
-  }, [isOpen]);
-
-  // Press ESC to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen) {
+      if (e.key === 'Escape') {
         onClose();
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    if (isOpen) {
+      window.addEventListener('keydown', handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
   }, [isOpen, onClose]);
 
   if (!isOpen || !vehicle) return null;
@@ -34,14 +26,38 @@ export default function RestockModal({ isOpen, onClose, onRestock, vehicle, isSu
     onRestock(vehicle.id, quantity);
   };
 
-  return (
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  return createPortal(
     <div
-      onClick={onClose}
-      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-backdrop-in"
+      onClick={handleOverlayClick}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: 'rgba(0,0,0,0.6)',
+        zIndex: 9998,
+      }}
+      className="p-4 backdrop-blur-md animate-fade-in"
     >
       <div
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto glass-card rounded-2xl border border-slate-800 shadow-2xl p-6 bg-slate-900 animate-modal-in"
+        style={{
+          position: 'relative',
+          maxWidth: '700px',
+          width: '90%',
+          maxHeight: '90vh',
+          overflowY: 'auto',
+        }}
+        className="glass-card rounded-2xl border border-slate-800 shadow-2xl p-6"
       >
         <button
           onClick={onClose}
@@ -90,6 +106,7 @@ export default function RestockModal({ isOpen, onClose, onRestock, vehicle, isSu
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }

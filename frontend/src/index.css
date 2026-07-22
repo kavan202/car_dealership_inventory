@@ -9,7 +9,7 @@
 }
 
 .glass-card {
-  background: rgba(15, 23, 42, 0.85);
+  background: rgba(15, 23, 42, 0.75);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.08);
@@ -38,47 +38,8 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes modalIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95) translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1) translateY(0);
-  }
-}
-
-@keyframes backdropIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes toastSlideIn {
-  from {
-    opacity: 0;
-    transform: translateX(100%);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
 .animate-fade-in {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-modal-in {
-  animation: modalIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-backdrop-in {
-  animation: backdropIn 0.2s ease-out forwards;
-}
-
-.animate-toast-slide {
-  animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 /* Custom Scrollbar */
