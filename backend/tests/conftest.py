@@ -1,34 +1,45 @@
 import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 from fastapi.testclient import TestClient
 
 from app.models.base import Base
 from app.database import get_db
 from app.main import app
 
-# In-memory SQLite for testing
+# In-memory SQLite with StaticPool so memory DB persists across test requests
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
-@pytest.fixture(scope="function")
-def db_session():
-    engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
-    TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL,
+    connect_args={"check_same_thread": False},
+    poolclass=StaticPool,
+)
+TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+
+@pytest.fixture(scope="function", autouse=True)
+def setup_db():
     Base.metadata.create_all(bind=engine)
+    yield
+    Base.metadata.drop_all(bind=engine)
+
+@pytest.fixture(scope="function")
+def db_session(setup_db):
     session = TestingSessionLocal()
     try:
         yield session
     finally:
         session.close()
-        Base.metadata.drop_all(bind=engine)
 
 @pytest.fixture(scope="function")
-def client(db_session):
+def client(setup_db):
     def _get_test_db():
+        session = TestingSessionLocal()
         try:
-            yield db_session
+            yield session
         finally:
-            pass
+            session.close()
 
     app.dependency_overrides[get_db] = _get_test_db
     with TestClient(app) as c:
