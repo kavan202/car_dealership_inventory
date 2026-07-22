@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Car, Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
+import { Car, Lock, User, ArrowRight, ShieldCheck, Info } from 'lucide-react';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -97,6 +97,16 @@ export default function Login() {
             <span>Default Test Account:</span>
           </div>
           <p><strong className="text-slate-200">Admin:</strong> admin / admin123</p>
+        </div>
+
+        {/* Info Banner for Admin Registration */}
+        <div className="mt-3 p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs text-blue-300 flex items-start space-x-2.5">
+          <button type="button" tabIndex={-1} className="w-5 h-5 rounded-full bg-blue-500/20 flex items-center justify-center shrink-0 mt-0.5 text-blue-400 cursor-default" title="Info">
+            <Info className="w-3.5 h-3.5" />
+          </button>
+          <span className="leading-relaxed">
+            Admin registration is restricted and can only be performed through the Admin Dashboard.
+          </span>
         </div>
 
         <div className="mt-6 text-center text-xs text-slate-400">

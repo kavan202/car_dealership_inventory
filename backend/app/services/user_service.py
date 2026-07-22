@@ -20,8 +20,8 @@ class UserService:
                 detail="Email already registered"
             )
 
-        # Validate role
-        role = user_in.role if user_in.role in [UserRole.USER.value, UserRole.ADMIN.value] else UserRole.USER.value
+        # Public registration always creates standard user role (Admin creation restricted to Admin Dashboard)
+        role = UserRole.USER.value
 
         user = User(
             username=user_in.username,
