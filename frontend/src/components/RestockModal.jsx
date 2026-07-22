@@ -4,16 +4,28 @@ import { X, PlusCircle, Package } from 'lucide-react';
 export default function RestockModal({ isOpen, onClose, onRestock, vehicle, isSubmitting }) {
   const [quantity, setQuantity] = useState(5);
 
+  // Lock body scroll when modal is open
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = 'hidden';
     } else {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'auto';
     }
     return () => {
-      document.body.style.overflow = 'unset';
+      document.body.style.overflow = 'auto';
     };
   }, [isOpen]);
+
+  // Press ESC to close modal
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
 
   if (!isOpen || !vehicle) return null;
 
@@ -23,8 +35,14 @@ export default function RestockModal({ isOpen, onClose, onRestock, vehicle, isSu
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md overflow-y-auto animate-fade-in">
-      <div className="glass-card w-full max-w-md rounded-2xl border border-slate-800 shadow-2xl p-6 relative my-auto max-h-[90vh] overflow-y-auto">
+    <div
+      onClick={onClose}
+      className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-backdrop-in"
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        className="relative w-full max-w-md max-h-[90vh] overflow-y-auto glass-card rounded-2xl border border-slate-800 shadow-2xl p-6 bg-slate-900 animate-modal-in"
+      >
         <button
           onClick={onClose}
           className="absolute top-4 right-4 p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition-colors"
