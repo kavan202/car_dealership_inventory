@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Car, Lock, User, ArrowRight } from 'lucide-react';
+import { Car, Lock, User, ArrowRight, ShieldCheck } from 'lucide-react';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -90,7 +90,14 @@ export default function Login() {
           </button>
         </form>
 
-
+        {/* Demo Credentials Box */}
+        <div className="mt-6 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 space-y-1.5">
+          <div className="flex items-center space-x-1.5 text-blue-400 font-semibold mb-1">
+            <ShieldCheck className="w-4 h-4" />
+            <span>Default Test Account:</span>
+          </div>
+          <p><strong className="text-slate-200">Admin:</strong> admin / admin123</p>
+        </div>
 
         <div className="mt-6 text-center text-xs text-slate-400">
           Don't have an account?{' '}
