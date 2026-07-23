@@ -11,7 +11,6 @@ This document maintains a transparent running log of all prompt instructions and
 **Actions Taken:**
 - Created root `.gitignore`, `PROMPTS.md`, and initial `README.md`.
 - Initialized local Git repository and set remote `https://github.com/kavan202/car_dealership_inventory.git`.
-- Executed commit: `chore: initialize project structure`.
 
 ---
 
@@ -22,7 +21,6 @@ This document maintains a transparent running log of all prompt instructions and
 **Actions Taken:**
 - Built Python virtual environment and installed FastAPI, Uvicorn, SQLAlchemy, Alembic, Pydantic v2, email-validator, PyJWT, Passlib (bcrypt), psycopg2-binary, and Pytest.
 - Structure created in `backend/app/` (`config.py`, `database.py`, `auth.py`, `models/`, `schemas/`, `services/`, `routers/`).
-- Executed commit: `chore: setup FastAPI project`.
 
 ---
 
@@ -32,9 +30,7 @@ This document maintains a transparent running log of all prompt instructions and
 
 **Actions Taken:**
 - Configured PostgreSQL connection string (`postgresql://postgres:admin123@localhost:5432/car_inventory`).
-- Initialized Alembic migrations and created initial migration `9c9904024dc9_create_user_and_vehicle_tables`.
-- Applied migrations with `alembic upgrade head`.
-- Executed commit: `feat: configure PostgreSQL database`.
+- Initialized Alembic migrations and applied schema migrations.
 
 ---
 
@@ -44,10 +40,7 @@ This document maintains a transparent running log of all prompt instructions and
 
 **Actions Taken:**
 - Authored Pytest tests in `backend/tests/test_user_model.py`.
-- Defined `User` SQLAlchemy model and `UserBase`, `UserCreate`, `UserResponse`, `Token` Pydantic schemas.
-- Executed commits:
-  1. `test: add user model tests`
-  2. `feat: implement user model`
+- Defined `User` SQLAlchemy model and Pydantic schemas.
 
 ---
 
@@ -58,144 +51,88 @@ This document maintains a transparent running log of all prompt instructions and
 **Actions Taken:**
 - Built `app/auth.py` and `UserService` for password hashing and JWT token generation.
 - Added `/api/auth/register` and `/api/auth/login` endpoints.
-- Authored Pytest suite in `backend/tests/test_auth.py`.
-- Executed commits:
-  1. `test: authentication endpoints`
-  2. `feat: JWT authentication`
 
 ---
 
-## Step 6: Vehicle Model
+## Step 6: Vehicle Model & Extended Attributes
 **Prompt:**
-> Create Vehicle model with id, make, model, category, price, quantity, created_at and updated_at. Generate SQLAlchemy model, schemas and migration.
+> Create Vehicle model with id, make, model, category, price, quantity, color, fuel_type, created_at and updated_at. Generate SQLAlchemy model, schemas and migration.
 
 **Actions Taken:**
 - Built `Vehicle` model in `app/models/vehicle.py`.
-- Defined Pydantic schemas (`VehicleCreate`, `VehicleUpdate`, `VehicleResponse`, `VehicleRestock`) in `app/schemas/vehicle.py`.
-- Executed commit: `feat: vehicle model`.
+- Added `color` and `fuel_type` attributes with Alembic migrations.
 
 ---
 
-## Step 7: CRUD REST APIs
+## Step 7: REST APIs & Multi-Criteria Search
 **Prompt:**
-> Create REST APIs for vehicles: Add Vehicle, List Vehicles, Update Vehicle, Delete Vehicle (Admin only).
+> Create REST APIs for vehicles: Add Vehicle, List Vehicles, Update Vehicle, Delete Vehicle (Admin only), and Search API supporting make, model, category, color, fuel_type, and price range.
 
 **Actions Taken:**
-- Created `VehicleService` and `vehicle_router.py` with endpoints:
-  - `POST /api/vehicles` (Add vehicle)
-  - `GET /api/vehicles` (List vehicles)
-  - `GET /api/vehicles/{id}` (Get single vehicle)
-  - `PUT /api/vehicles/{id}` (Update vehicle)
-  - `DELETE /api/vehicles/{id}` (Delete vehicle - Admin protected)
-- Executed commit: `feat: vehicle CRUD`.
+- Implemented `vehicle_router.py` with multi-criteria search.
 
 ---
 
-## Step 8: Vehicle Search API
+## Step 8: Indian Rupees (₹) & Customer Purchase / Test Drive Flow
 **Prompt:**
-> Implement GET /api/vehicles/search supporting make, model, category, minimum price and maximum price filters. Support multiple filters simultaneously.
+> Replace USD prices with Indian Rupees (₹) using Indian numbering format. Implement Customer Purchase dialog and Test Drive Booking without creating separate pages. Disable both Purchase and Book Test Drive buttons when vehicle quantity equals zero.
 
 **Actions Taken:**
-- Implemented `GET /api/vehicles/search` supporting multi-parameter queries.
-- Executed commit: `feat: vehicle search`.
+- Created `formatINR` in `formatters.js`.
+- Implemented `CustomerModal.jsx` and `TestDriveModal.jsx`.
+- Added stock guard logic in `VehicleCard.jsx` disabling buttons when stock = 0 (`Out of Stock` & `Book Test Drive (Disabled)`).
 
 ---
 
-## Step 9: Purchase API
+## Step 9: Login Entry Point & Protected Route Guards
 **Prompt:**
-> Implement Purchase API that decreases vehicle quantity by one. Return validation error if quantity becomes negative.
+> Make Login page the application's entry point ('/' redirects to '/login'). Protect routes '/dashboard', '/admin', '/analytics' so unauthenticated users are redirected to '/login'.
 
 **Actions Taken:**
-- Added `POST /api/vehicles/{id}/purchase` returning 400 when inventory reaches 0.
-- Executed commit: `feat: purchase vehicle`.
+- Updated `App.jsx` with React Router `<Navigate to="/login" replace />` guards for all protected routes and wildcard URL paths.
 
 ---
 
-## Step 10: Restock API
+## Step 10: Business Analytics & Database Integration
 **Prompt:**
-> Implement Restock API. Only Admin users can increase stock quantity.
+> Fix Business Analytics page to read directly from database sales and test_drives tables. Display 4 summary cards, vehicle-wise purchase/test drive count lists, and exactly 2 Recharts Bar Charts.
 
 **Actions Taken:**
-- Added `POST /api/vehicles/{id}/restock` protected by `get_current_admin_user` dependency.
-- Executed commit: `feat: restock inventory`.
+- Created `AnalyticsService` and `AnalyticsPanel.jsx` rendering 4 summary cards, count lists with fallback text when empty, and 2 Recharts Bar Charts.
 
 ---
 
-## Step 11: Comprehensive Backend Test Suite
+## Step 11: 12-Vehicle Photo Catalog Sync
 **Prompt:**
-> Write comprehensive Pytest test cases for authentication, CRUD, search, purchase and restock APIs. Cover successful and failure scenarios.
+> Add data and images matching the 12 vehicles in the provided photo (Ford F-150 Lightning, Chevrolet Corvette Z06, Toyota Camry XSE, BMW M5 Competition, Porsche 911 GT3 RS, Audi RS e-tron GT, Tata Harrier, Tesla Model S Plaid, Mercedes-Benz G 63 AMG, Hyundai Creta SX, Maruti Suzuki Swift VXi, Kia Seltos HTX).
 
 **Actions Taken:**
-- Implemented 16 test cases in `backend/tests/test_vehicles.py`, `test_auth.py`, `test_user_model.py`.
-- Verified 100% test pass rate with Pytest.
-- Executed commit: `test: backend API coverage`.
+- Updated `seed.py` and `formatters.js` model image mappings for all 12 exact vehicles.
 
 ---
 
-## Step 12: React + Vite Frontend Setup
+## Step 12: Streamline Admin Panel
 **Prompt:**
-> Create a React application using Vite. Install Tailwind CSS, React Router and Axios. Organize project into components, pages, services, hooks and context folders.
+> Business Analytics option is available in admin panel and analytics so remove from admin panel.
 
 **Actions Taken:**
-- Initialized React Vite project in `frontend/`, configured Tailwind CSS, Lucide icons, React Router DOM v6, Axios API interceptors.
-- Executed commit: `chore: setup React frontend`.
+- Removed tab switching strip and embedded `AnalyticsPanel` from `AdminPanel.jsx`. Admin Panel focuses purely on Inventory Catalog management and staff registration.
 
 ---
 
-## Step 13: Login & Register UI
+## Step 13: Dropdown Enhancements & Proper Case Colors
 **Prompt:**
-> Create responsive Login and Register pages using Tailwind CSS. Connect to FastAPI authentication APIs using Axios. Store JWT token securely and redirect after login.
+> Add Power Petrol in fuel type drop list and add Performance in categories drop list. Change color text (Proper Case).
 
 **Actions Taken:**
-- Built dark-mode glassmorphic `Login.jsx` and `Register.jsx` views with token storage and error handling.
-- Executed commit: `feat: authentication UI`.
+- Added `Power Petrol` to fuel types and `Performance` to categories in `SearchFilters.jsx` and `VehicleModal.jsx`.
+- Added `toProperCase` helper function in `formatters.js` and applied it across Vehicle Cards, Admin Inventory Table, and forms.
 
 ---
 
-## Step 14: Vehicle Dashboard UI
+## Step 14: Comprehensive Pytest Test Suite
 **Prompt:**
-> Create dashboard showing all vehicles in responsive cards. Display make, model, category, price and quantity.
+> Write comprehensive Pytest test cases covering authentication, CRUD, search filtering, purchase, test drives, image upload, and analytics.
 
 **Actions Taken:**
-- Built `Dashboard.jsx` and `VehicleCard.jsx` displaying inventory cards, stock badges, and status indicators.
-- Executed commit: `feat: dashboard`.
-
----
-
-## Step 15: Search & Filter UI
-**Prompt:**
-> Add search filters for make, model, category and price range. Call backend search API while typing.
-
-**Actions Taken:**
-- Created `SearchFilters.jsx` toolbar with real-time multi-criteria filtering.
-- Executed commit: `feat: vehicle filtering`.
-
----
-
-## Step 16: Interactive Purchase Button
-**Prompt:**
-> Add Purchase button for every vehicle. Disable button when quantity equals zero. Refresh inventory after purchase.
-
-**Actions Taken:**
-- Integrated purchase click handler with real-time stock decrements and toast alerts.
-- Executed commit: `feat: purchase UI`.
-
----
-
-## Step 17: Admin Management Panel
-**Prompt:**
-> Create Admin Dashboard with forms to Add, Update and Delete vehicles. Protect page so only admin users can access it.
-
-**Actions Taken:**
-- Built `AdminPanel.jsx`, `VehicleModal.jsx`, `RestockModal.jsx` for Admin CRUD and inventory restocking.
-- Executed commit: `feat: admin dashboard`.
-
----
-
-## Step 20: Documentation & AI Transparency
-**Prompt:**
-> Write a professional README including project overview, technologies, installation, API endpoints, screenshots, deployment instructions, testing guide and project architecture.
-
-**Actions Taken:**
-- Created comprehensive `README.md` and complete `PROMPTS.md`.
-- Executed final commit: `chore: complete documentation`.
+- Built 20 Pytest test cases in `backend/tests/`. All 20 tests pass 100%.
