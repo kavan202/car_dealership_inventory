@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShoppingCart, Calendar, Edit, Trash2, PlusCircle, CheckCircle2, AlertTriangle, XCircle, Tag, Palette, Fuel } from 'lucide-react';
-import { formatINR, getVehicleImage } from '../utils/formatters';
+import { formatINR, getVehicleImage, toProperCase } from '../utils/formatters';
 
 export default function VehicleCard({
   vehicle,
@@ -90,7 +90,7 @@ export default function VehicleCard({
               <span>Color:</span>
             </div>
             <div className="text-slate-200 font-semibold truncate pl-4">
-              {vehicle.color || 'Midnight Black'}
+              {toProperCase(vehicle.color || 'Midnight Black')}
             </div>
           </div>
           <div>

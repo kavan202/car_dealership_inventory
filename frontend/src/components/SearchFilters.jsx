@@ -10,8 +10,8 @@ export default function SearchFilters({ filters, setFilters, onReset }) {
     }));
   };
 
-  const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible', 'Hatchback'];
-  const fuelTypes = ['Petrol', 'Diesel', 'EV', 'Hybrid'];
+  const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible', 'Hatchback', 'Performance'];
+  const fuelTypes = ['Petrol', 'Power Petrol', 'Diesel', 'EV', 'Hybrid'];
 
   return (
     <div className="glass-card p-5 rounded-2xl mb-8 border border-slate-800 shadow-xl animate-fade-in">

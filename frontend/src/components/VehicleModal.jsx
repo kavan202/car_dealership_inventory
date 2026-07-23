@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Save, CarFront, Upload, Image as ImageIcon, Palette, Fuel, DollarSign } from 'lucide-react';
 import { vehicleService } from '../services/vehicleService';
-import { getVehicleImage } from '../utils/formatters';
+import { getVehicleImage, toProperCase } from '../utils/formatters';
 
 export default function VehicleModal({ isOpen, onClose, onSave, vehicle, isSubmitting }) {
   const [formData, setFormData] = useState({
@@ -20,8 +20,8 @@ export default function VehicleModal({ isOpen, onClose, onSave, vehicle, isSubmi
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imageError, setImageError] = useState('');
 
-  const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible'];
-  const fuelTypes = ['Petrol', 'Diesel', 'EV', 'Hybrid'];
+  const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible', 'Hatchback', 'Performance'];
+  const fuelTypes = ['Petrol', 'Power Petrol', 'Diesel', 'EV', 'Hybrid'];
 
   useEffect(() => {
     if (vehicle) {
@@ -29,7 +29,7 @@ export default function VehicleModal({ isOpen, onClose, onSave, vehicle, isSubmi
         make: vehicle.make || '',
         model: vehicle.model || '',
         category: vehicle.category || 'Sedan',
-        color: vehicle.color || 'Midnight Black',
+        color: toProperCase(vehicle.color || 'Midnight Black'),
         fuel_type: vehicle.fuel_type || 'Hybrid',
         price: vehicle.price || '',
         quantity: vehicle.quantity !== undefined ? vehicle.quantity : '',
@@ -103,6 +103,7 @@ export default function VehicleModal({ isOpen, onClose, onSave, vehicle, isSubmi
     e.preventDefault();
     onSave({
       ...formData,
+      color: toProperCase(formData.color),
       price: parseFloat(formData.price),
       quantity: parseInt(formData.quantity, 10),
     });

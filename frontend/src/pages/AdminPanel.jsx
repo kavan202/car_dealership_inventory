@@ -6,7 +6,7 @@ import VehicleModal from '../components/VehicleModal';
 import RestockModal from '../components/RestockModal';
 import RegisterAdminModal from '../components/RegisterAdminModal';
 import Toast from '../components/Toast';
-import { formatINR } from '../utils/formatters';
+import { formatINR, toProperCase } from '../utils/formatters';
 import { ShieldCheck, Plus, Edit, Trash2, PlusCircle, Search, CarFront, AlertTriangle, UserPlus, ArrowUp, ArrowDown } from 'lucide-react';
 
 export default function AdminPanel() {
@@ -227,7 +227,7 @@ export default function AdminPanel() {
                       </span>
                     </td>
                     <td className="py-4 px-6 font-medium text-slate-300">
-                      {v.color || 'Midnight Black'}
+                      {toProperCase(v.color || 'Midnight Black')}
                     </td>
                     <td className="py-4 px-6 font-medium text-blue-300">
                       {v.fuel_type || 'Hybrid'}
