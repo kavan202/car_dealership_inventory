@@ -10,7 +10,7 @@ export default function SearchFilters({ filters, setFilters, onReset }) {
     }));
   };
 
-  const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible'];
+  const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible', 'Hatchback'];
   const fuelTypes = ['Petrol', 'Diesel', 'EV', 'Hybrid'];
 
   return (
