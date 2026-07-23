@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Car, ShieldAlert, LogOut, LayoutDashboard, UserCheck } from 'lucide-react';
+import { CarFront, ShieldAlert, LogOut, LayoutDashboard, UserCheck, BarChart3 } from 'lucide-react';
 
 export default function Navbar() {
   const { user, logout, isAdmin } = useAuth();
@@ -22,7 +22,7 @@ export default function Navbar() {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/30 group-hover:scale-105 transition-transform">
-              <Car className="w-6 h-6 text-white" />
+              <CarFront className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold bg-gradient-to-r from-white via-slate-200 to-slate-400 bg-clip-text text-transparent">
               Auto<span className="text-blue-500">Vault</span>
@@ -45,17 +45,31 @@ export default function Navbar() {
               </Link>
 
               {isAdmin && (
-                <Link
-                  to="/admin"
-                  className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive('/admin')
-                      ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
-                      : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
-                  }`}
-                >
-                  <ShieldAlert className="w-4 h-4 text-indigo-400" />
-                  <span>Admin Panel</span>
-                </Link>
+                <>
+                  <Link
+                    to="/admin"
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                      isActive('/admin')
+                        ? 'bg-indigo-600/20 text-indigo-400 border border-indigo-500/30'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <ShieldAlert className="w-4 h-4 text-indigo-400" />
+                    <span>Admin Panel</span>
+                  </Link>
+
+                  <Link
+                    to="/analytics"
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
+                      isActive('/analytics')
+                        ? 'bg-purple-600/20 text-purple-400 border border-purple-500/30'
+                        : 'text-slate-300 hover:text-white hover:bg-slate-800/50'
+                    }`}
+                  >
+                    <BarChart3 className="w-4 h-4 text-purple-400" />
+                    <span>Analytics</span>
+                  </Link>
+                </>
               )}
 
               {/* User Profile Pill */}

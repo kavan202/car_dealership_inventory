@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { Car, Lock, User, ArrowRight, ShieldCheck, Info } from 'lucide-react';
+import { CarFront, Lock, User, ArrowRight, ShieldCheck, Info } from 'lucide-react';
 import ReviewerInfoModal from '../components/ReviewerInfoModal';
 
 export default function Login() {
@@ -51,7 +51,7 @@ export default function Login() {
         {/* Header */}
         <div className="text-center mb-8">
           <div className="w-14 h-14 bg-gradient-to-tr from-blue-600 to-indigo-600 rounded-2xl mx-auto flex items-center justify-center shadow-xl shadow-blue-500/30 mb-4">
-            <Car className="w-8 h-8 text-white" />
+            <CarFront className="w-8 h-8 text-white" />
           </div>
           <h1 className="text-2xl font-bold text-slate-100">Welcome Back</h1>
           <p className="text-sm text-slate-400 mt-1">Sign in to manage your dealership inventory</p>
@@ -104,42 +104,35 @@ export default function Login() {
           </button>
         </form>
 
-        {/* Reviewer / Demo Credentials Box */}
-        <div className="mt-6 p-4 rounded-2xl bg-slate-900/60 border border-slate-800 text-xs text-slate-400 space-y-2">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-1.5 text-blue-400 font-semibold">
-              <ShieldCheck className="w-4 h-4" />
-              <span>Reviewer / Demo Credentials</span>
-            </div>
+        <div className="mt-6 pt-6 border-t border-slate-800/80 text-center flex items-center justify-between">
+          <p className="text-xs text-slate-400">
+            Need an account?{' '}
+            <Link to="/register" className="text-blue-400 hover:text-blue-300 font-semibold">
+              Register
+            </Link>
+          </p>
+
+          <div
+            className="relative inline-block"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <button
               type="button"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-              onClick={() => setIsInfoModalOpen((prev) => !prev)}
-              className="w-5 h-5 rounded-full bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0 hover:bg-blue-500/35 hover:text-blue-300 transition-all focus:outline-none"
-              title="Hover to view Reviewer Information"
-              aria-label="Reviewer Information"
+              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 text-xs font-semibold transition-colors"
             >
               <Info className="w-3.5 h-3.5" />
+              <span>Reviewer Info</span>
             </button>
-          </div>
-          <p className="pt-0.5"><strong className="text-slate-200">Admin:</strong> admin / admin123</p>
-        </div>
 
-        <div className="mt-6 text-center text-xs text-slate-400">
-          Don't have an account?{' '}
-          <Link to="/register" className="text-blue-400 hover:underline font-semibold">
-            Create account
-          </Link>
+            <ReviewerInfoModal
+              isOpen={isInfoModalOpen}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
+            />
+          </div>
         </div>
       </div>
-
-      <ReviewerInfoModal
-        isOpen={isInfoModalOpen}
-        onClose={() => setIsInfoModalOpen(false)}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={handleMouseLeave}
-      />
     </div>
   );
 }

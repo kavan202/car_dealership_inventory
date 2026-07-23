@@ -32,8 +32,8 @@ export const vehicleService = {
     return response.data;
   },
 
-  async purchase(id) {
-    const response = await api.post(`/vehicles/${id}/purchase`);
+  async purchase(id, customerData) {
+    const response = await api.post(`/vehicles/${id}/purchase`, customerData);
     return response.data;
   },
 
@@ -41,6 +41,27 @@ export const vehicleService = {
     const response = await api.post(`/vehicles/${id}/restock`, {
       quantity_to_add: parseInt(quantityToAdd, 10),
     });
+    return response.data;
+  },
+
+  async uploadImage(file) {
+    const formData = new FormData();
+    formData.append('file', file);
+    const response = await api.post('/vehicles/upload-image', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
+
+  async bookTestDrive(testDriveData) {
+    const response = await api.post('/test-drives', testDriveData);
+    return response.data;
+  },
+
+  async getAnalytics() {
+    const response = await api.get('/analytics');
     return response.data;
   },
 };

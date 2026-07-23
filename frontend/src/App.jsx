@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminPanel from './pages/AdminPanel';
+import AnalyticsPanel from './pages/AnalyticsPanel';
 
 function ProtectedRoute({ children, adminOnly = false }) {
   const { token, loading, isAdmin } = useAuth();
@@ -35,6 +36,7 @@ function MainLayout() {
       <Navbar />
       <main className="flex-1">
         <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route
@@ -53,7 +55,17 @@ function MainLayout() {
               </ProtectedRoute>
             }
           />
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          <Route
+            path="/analytics"
+            element={
+              <ProtectedRoute adminOnly={true}>
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                  <AnalyticsPanel />
+                </div>
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </main>
     </div>

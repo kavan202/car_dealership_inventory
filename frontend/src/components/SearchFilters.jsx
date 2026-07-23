@@ -1,5 +1,5 @@
 import React from 'react';
-import { Search, Filter, RefreshCw, DollarSign, Tag, Car } from 'lucide-react';
+import { Search, Filter, RefreshCw, Tag, CarFront, Palette, Fuel } from 'lucide-react';
 
 export default function SearchFilters({ filters, setFilters, onReset }) {
   const handleChange = (e) => {
@@ -11,6 +11,7 @@ export default function SearchFilters({ filters, setFilters, onReset }) {
   };
 
   const categories = ['Sedan', 'SUV', 'Truck', 'Electric', 'Coupe', 'Luxury', 'Sports', 'Convertible'];
+  const fuelTypes = ['Petrol', 'Diesel', 'EV', 'Hybrid'];
 
   return (
     <div className="glass-card p-5 rounded-2xl mb-8 border border-slate-800 shadow-xl animate-fade-in">
@@ -28,16 +29,16 @@ export default function SearchFilters({ filters, setFilters, onReset }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-7 gap-3">
         {/* Make search */}
         <div className="relative">
-          <Car className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+          <CarFront className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
           <input
             type="text"
             name="make"
             value={filters.make || ''}
             onChange={handleChange}
-            placeholder="Filter by Make (e.g. Tesla)"
+            placeholder="Make (e.g. Tesla)"
             className="w-full pl-9 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
           />
         </div>
@@ -50,7 +51,7 @@ export default function SearchFilters({ filters, setFilters, onReset }) {
             name="model"
             value={filters.model || ''}
             onChange={handleChange}
-            placeholder="Filter by Model (e.g. Model 3)"
+            placeholder="Model (e.g. Camry)"
             className="w-full pl-9 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
           />
         </div>
@@ -73,29 +74,60 @@ export default function SearchFilters({ filters, setFilters, onReset }) {
           </select>
         </div>
 
-        {/* Min Price */}
+        {/* Color search */}
         <div className="relative">
-          <DollarSign className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+          <Palette className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+          <input
+            type="text"
+            name="color"
+            value={filters.color || ''}
+            onChange={handleChange}
+            placeholder="Color (e.g. Black)"
+            className="w-full pl-9 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
+          />
+        </div>
+
+        {/* Fuel Type dropdown */}
+        <div className="relative">
+          <Fuel className="w-4 h-4 absolute left-3 top-3 text-blue-400" />
+          <select
+            name="fuel_type"
+            value={filters.fuel_type || ''}
+            onChange={handleChange}
+            className="w-full pl-9 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 focus:outline-none appearance-none cursor-pointer"
+          >
+            <option value="" className="bg-slate-900 text-slate-400">All Fuel Types</option>
+            {fuelTypes.map((fuel) => (
+              <option key={fuel} value={fuel} className="bg-slate-900 text-slate-200">
+                {fuel}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Min Price (₹) */}
+        <div className="relative">
+          <span className="absolute left-3.5 top-2 text-slate-400 text-sm font-bold">₹</span>
           <input
             type="number"
             name="min_price"
             value={filters.min_price || ''}
             onChange={handleChange}
-            placeholder="Min Price ($)"
-            className="w-full pl-9 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
+            placeholder="Min Price (₹)"
+            className="w-full pl-8 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
           />
         </div>
 
-        {/* Max Price */}
+        {/* Max Price (₹) */}
         <div className="relative">
-          <DollarSign className="w-4 h-4 absolute left-3 top-3 text-slate-400" />
+          <span className="absolute left-3.5 top-2 text-slate-400 text-sm font-bold">₹</span>
           <input
             type="number"
             name="max_price"
             value={filters.max_price || ''}
             onChange={handleChange}
-            placeholder="Max Price ($)"
-            className="w-full pl-9 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
+            placeholder="Max Price (₹)"
+            className="w-full pl-8 pr-3 py-2 text-sm glass-input rounded-xl text-slate-200 placeholder-slate-500 focus:outline-none"
           />
         </div>
       </div>

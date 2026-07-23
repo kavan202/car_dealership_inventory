@@ -2,20 +2,23 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
 
-export default function Toast({ toast, onClose }) {
+export default function Toast({ toast, type: propType, message: propMessage, onClose }) {
+  const type = toast?.type || propType;
+  const message = toast?.message || propMessage;
+
   useEffect(() => {
-    if (toast) {
+    if (message) {
       const timer = setTimeout(() => {
         onClose();
       }, 4000);
       return () => clearTimeout(timer);
     }
-  }, [toast, onClose]);
+  }, [message, onClose]);
 
-  if (!toast) return null;
+  if (!message) return null;
 
-  const isSuccess = toast.type === 'success';
-  const isError = toast.type === 'error';
+  const isSuccess = type === 'success';
+  const isError = type === 'error';
 
   return createPortal(
     <div
@@ -40,7 +43,7 @@ export default function Toast({ toast, onClose }) {
         {isError && <AlertCircle className="w-5 h-5 text-rose-400 flex-shrink-0" />}
         {!isSuccess && !isError && <Info className="w-5 h-5 text-blue-400 flex-shrink-0" />}
 
-        <p className="text-sm font-medium pr-2">{toast.message}</p>
+        <p className="text-sm font-medium pr-2">{message}</p>
 
         <button
           onClick={onClose}

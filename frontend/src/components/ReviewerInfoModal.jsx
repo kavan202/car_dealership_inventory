@@ -102,11 +102,11 @@ export default function ReviewerInfoModal({ isOpen, onClose, onMouseEnter, onMou
           <ul className="space-y-2 text-xs text-amber-200/90 leading-relaxed">
             <li className="flex items-start space-x-2">
               <span className="text-amber-400 font-bold text-sm leading-none">•</span>
-              <span>Public users can only register Customer accounts.</span>
+              <span>Salesperson can only register staff accounts.</span>
             </li>
             <li className="flex items-start space-x-2">
               <span className="text-amber-400 font-bold text-sm leading-none">•</span>
-              <span>Admin registration is restricted and is only available through the Admin Panel after administrator login.</span>
+              <span>Admin registration is restricted and is only available through the Admin Panel after Administrator login.</span>
             </li>
           </ul>
         </div>

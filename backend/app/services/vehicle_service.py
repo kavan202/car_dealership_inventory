@@ -2,6 +2,8 @@ from typing import List, Optional
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from app.models.vehicle import Vehicle
+from app.models.customer import Customer
+from app.models.sale import Sale
 from app.schemas.vehicle import VehicleCreate, VehicleUpdate
 
 class VehicleService:
@@ -11,8 +13,11 @@ class VehicleService:
             make=vehicle_in.make,
             model=vehicle_in.model,
             category=vehicle_in.category,
+            color=vehicle_in.color or "Midnight Black",
+            fuel_type=vehicle_in.fuel_type or "Hybrid",
             price=vehicle_in.price,
             quantity=vehicle_in.quantity,
+            image_url=vehicle_in.image_url,
         )
         db.add(vehicle)
         db.commit()
@@ -55,6 +60,8 @@ class VehicleService:
         make: Optional[str] = None,
         model: Optional[str] = None,
         category: Optional[str] = None,
+        color: Optional[str] = None,
+        fuel_type: Optional[str] = None,
         min_price: Optional[float] = None,
         max_price: Optional[float] = None,
     ) -> List[Vehicle]:
@@ -65,6 +72,10 @@ class VehicleService:
             query = query.filter(Vehicle.model.ilike(f"%{model}%"))
         if category:
             query = query.filter(Vehicle.category.ilike(f"%{category}%"))
+        if color:
+            query = query.filter(Vehicle.color.ilike(f"%{color}%"))
+        if fuel_type:
+            query = query.filter(Vehicle.fuel_type.ilike(f"%{fuel_type}%"))
         if min_price is not None:
             query = query.filter(Vehicle.price >= min_price)
         if max_price is not None:
@@ -72,7 +83,13 @@ class VehicleService:
         return query.all()
 
     @staticmethod
-    def purchase_vehicle(db: Session, vehicle_id: int) -> Vehicle:
+    def purchase_vehicle(
+        db: Session,
+        vehicle_id: int,
+        customer_name: Optional[str] = None,
+        customer_phone: Optional[str] = None,
+        customer_email: Optional[str] = None,
+    ) -> Vehicle:
         vehicle = VehicleService.get_vehicle_by_id(db, vehicle_id)
         if vehicle.quantity <= 0:
             raise HTTPException(
@@ -80,6 +97,24 @@ class VehicleService:
                 detail="Vehicle is out of stock"
             )
         vehicle.quantity -= 1
+
+        # Record Customer & Sale if info provided
+        if customer_name and customer_phone:
+            customer = Customer(
+                full_name=customer_name,
+                mobile_number=customer_phone,
+                email=customer_email
+            )
+            db.add(customer)
+            db.flush()
+
+            sale = Sale(
+                vehicle_id=vehicle.id,
+                customer_id=customer.id,
+                sale_price=vehicle.price
+            )
+            db.add(sale)
+
         db.commit()
         db.refresh(vehicle)
         return vehicle
