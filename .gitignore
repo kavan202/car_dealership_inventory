@@ -16,8 +16,7 @@ venv.bak/
 .pytest_cache/
 .coverage
 htmlcov/
-backend/uploads/*
-!backend/uploads/.gitkeep
+alembic.ini.bak
 
 # Node / React
 node_modules/

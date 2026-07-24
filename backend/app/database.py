@@ -2,16 +2,11 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
-# Fix Render PostgreSQL URL format if starts with postgres://
-db_url = settings.DATABASE_URL
-if db_url.startswith("postgres://"):
-    db_url = db_url.replace("postgres://", "postgresql://", 1)
-
 # Create engine with connect args for SQLite if SQLite URL is provided
-connect_args = {"check_same_thread": False} if db_url.startswith("sqlite") else {}
+connect_args = {"check_same_thread": False} if settings.DATABASE_URL.startswith("sqlite") else {}
 
 engine = create_engine(
-    db_url,
+    settings.DATABASE_URL,
     connect_args=connect_args,
     pool_pre_ping=True
 )

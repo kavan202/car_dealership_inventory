@@ -46,10 +46,7 @@ export const CATEGORY_DEFAULT_IMAGES = {
 export const getVehicleImage = (vehicle) => {
   if (vehicle && vehicle.image_url) {
     if (vehicle.image_url.startsWith('/static/uploads')) {
-      const apiHost = import.meta.env.VITE_API_URL
-        ? import.meta.env.VITE_API_URL.replace('/api', '')
-        : 'http://127.0.0.1:8000';
-      return `${apiHost}${vehicle.image_url}`;
+      return `http://127.0.0.1:8000${vehicle.image_url}`;
     }
     return vehicle.image_url;
   }
