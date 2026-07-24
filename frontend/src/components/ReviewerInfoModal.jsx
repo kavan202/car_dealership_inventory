@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Info, AlertCircle } from 'lucide-react';
 
-export default function ReviewerInfoModal({ isOpen, onClose, onMouseEnter, onMouseLeave }) {
+export default function ReviewerInfoModal({ isOpen, onClose }) {
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
@@ -28,8 +28,6 @@ export default function ReviewerInfoModal({ isOpen, onClose, onMouseEnter, onMou
   return createPortal(
     <div
       onClick={handleOverlayClick}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
       style={{
         position: 'fixed',
         top: 0,
@@ -45,8 +43,6 @@ export default function ReviewerInfoModal({ isOpen, onClose, onMouseEnter, onMou
       className="p-4 backdrop-blur-md animate-fade-in"
     >
       <div
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
         style={{
           position: 'relative',
           maxWidth: '480px',
@@ -63,6 +59,7 @@ export default function ReviewerInfoModal({ isOpen, onClose, onMouseEnter, onMou
         >
           <X className="w-5 h-5" />
         </button>
+
         {/* Modal Header */}
         <div className="flex items-center space-x-3 mb-5">
           <div className="w-10 h-10 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 shrink-0">
@@ -76,7 +73,6 @@ export default function ReviewerInfoModal({ isOpen, onClose, onMouseEnter, onMou
 
         {/* Body Section */}
         <div className="mb-5 space-y-2.5 p-4 rounded-2xl bg-slate-900/80 border border-slate-800/80">
-          {/* <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-2">Body</h3> */}
           <ul className="space-y-2 text-xs text-slate-300">
             <li className="flex items-start space-x-2">
               <span className="text-blue-400 font-bold text-sm leading-none">•</span>

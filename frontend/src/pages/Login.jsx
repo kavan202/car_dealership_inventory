@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { CarFront, Lock, User, ArrowRight, ShieldCheck, Info } from 'lucide-react';
+import { CarFront, Lock, User, ArrowRight, Info } from 'lucide-react';
 import ReviewerInfoModal from '../components/ReviewerInfoModal';
 
 export default function Login() {
@@ -10,21 +10,9 @@ export default function Login() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isInfoModalOpen, setIsInfoModalOpen] = useState(false);
-  const timeoutRef = useRef(null);
 
   const { login } = useAuth();
   const navigate = useNavigate();
-
-  const handleMouseEnter = () => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setIsInfoModalOpen(true);
-  };
-
-  const handleMouseLeave = () => {
-    timeoutRef.current = setTimeout(() => {
-      setIsInfoModalOpen(false);
-    }, 200);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -112,27 +100,22 @@ export default function Login() {
             </Link>
           </p>
 
-          <div
-            className="relative inline-block"
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
+          <button
+            type="button"
+            onClick={() => setIsInfoModalOpen(true)}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 text-xs font-semibold transition-colors"
           >
-            <button
-              type="button"
-              className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 border border-blue-500/20 text-xs font-semibold transition-colors"
-            >
-              <Info className="w-3.5 h-3.5" />
-              <span>Reviewer Info</span>
-            </button>
-
-            <ReviewerInfoModal
-              isOpen={isInfoModalOpen}
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            />
-          </div>
+            <Info className="w-3.5 h-3.5" />
+            <span>Reviewer Info</span>
+          </button>
         </div>
       </div>
+
+      {/* Reviewer Info Modal */}
+      <ReviewerInfoModal
+        isOpen={isInfoModalOpen}
+        onClose={() => setIsInfoModalOpen(false)}
+      />
     </div>
   );
 }
